@@ -24,51 +24,12 @@ public class BFS {
     /**
      * @param args the command line arguments
      */
-    /*public class Searcher
-    {
-        int V;
-        int E;
-        HashSet<Integer> AdjList[];
-        int Lengths[];
-        boolean marked[];
-        Queue<Integer> q = new LinkedList();
-        Searcher(HashSet<Integer> AdjList[], int V, int E)
-        {
-            this.V = V;
-            this.E = E;
-            Lengths = new int[V + 1];
-            marked = new boolean[V + 1];
-            q.offer(1);
-            while(!q.isEmpty())
-            {
-                int s = q.poll();
-                Iterator<Integer> it = AdjList[s].iterator();
-                while(it.hasNext())
-                {
-                    int w = it.next();
-                    if(!marked[w])
-                    {
-                        marked[w] = true;
-                        Lengths[w] = Lengths[s] + 1;
-                        q.offer(w);
-                    }
-                }
-            }
-        }
-        
-    }*/
-    private static int[] Searcher(HashSet<Integer> AdjList[], int V, int E)
-    {
-        int lengths[]  = new int[V + 1];
+    private static int[] Searcher(HashSet<Integer> AdjList[], int V, int E) {
+        int lengths[] = new int[V + 1];
         boolean marked[] = new boolean[V + 1];
         Queue<Integer> q = new LinkedList();
         q.offer(1);
         marked[1] = true;
-        Iterator<Integer> i = AdjList[1].iterator();
-        while(i.hasNext())
-        {
-            System.out.println(i.next());
-        }
         while (!q.isEmpty()) {
             int s = q.poll();
             Iterator<Integer> it = AdjList[s].iterator();
@@ -83,36 +44,33 @@ public class BFS {
         }
         return lengths;
     }
-    public static void main(String[] args) throws FileNotFoundException, IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("rosalind_bfs.txt"));
-        FileWriter writer = new FileWriter(new File("output.txt"));
-        String inp[] = reader.readLine().split(" ");
-        int V = Integer.parseInt(inp[0]);
-        int E = Integer.parseInt(inp[1]);
-        HashSet<Integer> AdjList[] = new HashSet[V+1];
-        for(int i = 0; i < V+1; i++)
-        {
-            AdjList[i] = new HashSet();
-        }
-        while(reader.ready())
-        {
-            String str[] = reader.readLine().split(" ");
-            AdjList[Integer.parseInt(str[0])].add(Integer.parseInt(str[1]));
-        }
-        int res[] = Searcher(AdjList, V, E);
-        for(int i = 1; i < V+1; i++)
-        {
-            if(i !=1 && res[i] == 0)
-            {
-                writer.write("-1 ");
-                writer.flush();
+
+    public static void main(String[] args){
+        try (BufferedReader reader = new BufferedReader(new FileReader("rosalind_bfs.txt"));
+                FileWriter writer = new FileWriter(new File("output.txt"))) {
+            String inp[] = reader.readLine().split(" ");
+            int V = Integer.parseInt(inp[0]);
+            int E = Integer.parseInt(inp[1]);
+            HashSet<Integer> AdjList[] = new HashSet[V + 1];
+            for (int i = 0; i < V + 1; i++) {
+                AdjList[i] = new HashSet();
             }
-            else
-            {
-                writer.write(Integer.toString(res[i]) + " ");
-                writer.flush();
+            while (reader.ready()) {
+                String str[] = reader.readLine().split(" ");
+                AdjList[Integer.parseInt(str[0])].add(Integer.parseInt(str[1]));
             }
+            int res[] = Searcher(AdjList, V, E);
+            for (int i = 1; i < V + 1; i++) {
+                if (i != 1 && res[i] == 0) {
+                    writer.write("-1 ");
+                    writer.flush();
+                } else {
+                    writer.write(Integer.toString(res[i]) + " ");
+                    writer.flush();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        writer.close();
     }
 }
