@@ -19,20 +19,34 @@ import java.util.Queue;
  *
  * @author TofixXx
  */
+
+/**Breadth-first search algorithm, for oriented graph.
+ * Input file need to contain pairs of vertexes, that corresponds
+ * edges in oriented graph, and information about number of edges and vertexes.
+ * 
+ * Time complexity is O(V+E).
+ */
 public class BFS {
 
-    /**
-     * @param args the command line arguments
+    /**Find shortes paths from vertex 1 to other vertexes
+     * 
+     * @param adjList data structure, that contains information about
+     * paths from every vertex
+     * 
+     * @param v total number of vertices
+     * 
+     * @return path array, that contains shortest path lengths from vertex 1 to 
+     * all other vertices. If path does not exist, length set to 0
      */
-    private static int[] Searcher(HashSet<Integer> AdjList[], int V, int E) {
-        int lengths[] = new int[V + 1];
-        boolean marked[] = new boolean[V + 1];
+    private static int[] findShortestPaths(HashSet<Integer>[] adjList, int v) {
+        int lengths[] = new int[v + 1];
+        boolean marked[] = new boolean[v + 1];
         Queue<Integer> q = new LinkedList();
         q.offer(1);
         marked[1] = true;
         while (!q.isEmpty()) {
             int s = q.poll();
-            Iterator<Integer> it = AdjList[s].iterator();
+            Iterator<Integer> it = adjList[s].iterator();
             while (it.hasNext()) {
                 int w = it.next();
                 if (!marked[w]) {
@@ -49,25 +63,24 @@ public class BFS {
         try (BufferedReader reader = new BufferedReader(new FileReader("rosalind_bfs.txt"));
                 FileWriter writer = new FileWriter(new File("output.txt"))) {
             String inp[] = reader.readLine().split(" ");
-            int V = Integer.parseInt(inp[0]);
-            int E = Integer.parseInt(inp[1]);
-            HashSet<Integer> AdjList[] = new HashSet[V + 1];
-            for (int i = 0; i < V + 1; i++) {
-                AdjList[i] = new HashSet();
+            int vNum = Integer.parseInt(inp[0]);
+            int eNum = Integer.parseInt(inp[1]);
+            HashSet<Integer>[] adjList = new HashSet[vNum + 1];
+            for (int i = 0; i < vNum + 1; i++) {
+                adjList[i] = new HashSet();
             }
             while (reader.ready()) {
                 String str[] = reader.readLine().split(" ");
-                AdjList[Integer.parseInt(str[0])].add(Integer.parseInt(str[1]));
+                adjList[Integer.parseInt(str[0])].add(Integer.parseInt(str[1]));
             }
-            int res[] = Searcher(AdjList, V, E);
-            for (int i = 1; i < V + 1; i++) {
+            int res[] = findShortestPaths(adjList, vNum);
+            for (int i = 1; i < vNum + 1; i++) {
                 if (i != 1 && res[i] == 0) {
                     writer.write("-1 ");
-                    writer.flush();
                 } else {
                     writer.write(Integer.toString(res[i]) + " ");
-                    writer.flush();
                 }
+                writer.flush();
             }
         } catch (IOException e) {
             e.printStackTrace();
